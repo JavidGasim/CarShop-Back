@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CarShop.Entities.Entites;
 
-namespace CarShop.Entities.Entites
+namespace CarShop.WepApi.DTOS
 {
-    public class Car
+    public class CarUpdateDto
     {
         public int Id { get; set; }
         public string? Color { get; set; }
-        //public bool IsFav { get; set; } = false;
         public string? Url1 { get; set; }
         public string? Url2 { get; set; }
         public string? Url3 { get; set; }
@@ -26,7 +21,7 @@ namespace CarShop.Entities.Entites
         public string? IsNew { get; set; }
         public string? Situation { get; set; }
         public string? Description { get; set; }
-        public virtual CustomIdentityUser? CustomIdentityUser { get; set; }
-        public virtual ICollection<Favourite> Favorites { get; set; } = new List<Favourite>();
+        //public virtual CustomIdentityUser? CustomIdentityUser { get; set; }
+        //public virtual ICollection<Favourite> Favorites { get; set; } = new List<Favourite>();
     }
 }

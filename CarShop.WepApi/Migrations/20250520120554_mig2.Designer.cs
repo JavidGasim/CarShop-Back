@@ -4,6 +4,7 @@ using CarShop.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarShop.WepApi.Migrations
 {
     [DbContext(typeof(CarShopDbContext))]
-    partial class CarShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250520120554_mig2")]
+    partial class mig2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -213,7 +216,7 @@ namespace CarShop.WepApi.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Favourites");
+                    b.ToTable("Favourite");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -324,11 +327,9 @@ namespace CarShop.WepApi.Migrations
 
             modelBuilder.Entity("CarShop.Entities.Entites.Car", b =>
                 {
-                    b.HasOne("CarShop.Entities.Entites.CustomIdentityUser", "CustomIdentityUser")
+                    b.HasOne("CarShop.Entities.Entites.CustomIdentityUser", null)
                         .WithMany("Cars")
                         .HasForeignKey("CustomIdentityUserId");
-
-                    b.Navigation("CustomIdentityUser");
                 });
 
             modelBuilder.Entity("CarShop.Entities.Entites.Favourite", b =>

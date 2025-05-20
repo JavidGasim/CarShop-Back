@@ -60,6 +60,8 @@ builder.Services.Configure<FormOptions>(o =>
 
 builder.Services.AddScoped<ICustomIdentityUserDAL, CustomIdentityUserDAL>();
 builder.Services.AddScoped<ICustomIdentityUserService, CustomIdentityUserService>();
+builder.Services.AddScoped<ICarDAL, CarDAL>();
+builder.Services.AddScoped<ICarService, CarService>();
 
 var connection = builder.Configuration.GetConnectionString("Default");
 builder.Services.AddDbContext<CarShopDbContext>(option =>

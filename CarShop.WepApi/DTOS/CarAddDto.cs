@@ -1,32 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace CarShop.Entities.Entites
+namespace CarShop.WepApi.DTOS
 {
-    public class Car
+    public class CarAddDto
     {
+        [Required]
         public int Id { get; set; }
+        [Required]
         public string? Color { get; set; }
-        //public bool IsFav { get; set; } = false;
+        [Required]
+
         public string? Url1 { get; set; }
+        [Required]
         public string? Url2 { get; set; }
+        [Required]
         public string? Url3 { get; set; }
+        [Required]
         public string? Price { get; set; }
+        [Required]
         public string? Marka { get; set; }
+        [Required]
         public string? Model { get; set; }
+        [Required]
         public string? Year { get; set; }
+        [Required]
         public string? BanType { get; set; }
+        [Required]
+
         public string? Engine { get; set; }
+        [Required]
         public string? March { get; set; }
+        [Required]
         public string? GearBox { get; set; }
+        [Required]
         public string? Gear { get; set; }
+        [Required]
         public string? IsNew { get; set; }
+        [Required]
         public string? Situation { get; set; }
+        [Required]
         public string? Description { get; set; }
-        public virtual CustomIdentityUser? CustomIdentityUser { get; set; }
-        public virtual ICollection<Favourite> Favorites { get; set; } = new List<Favourite>();
+        [Required]
+        public string? UserId { get; set; }
+
     }
 }

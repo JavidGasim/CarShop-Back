@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
-using static System.Runtime.InteropServices.JavaScript.JSType;  
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CarShop.DataAccess.Data
 {
@@ -19,6 +19,7 @@ namespace CarShop.DataAccess.Data
         }
 
         public DbSet<Car> Cars { get; set; }
+        public DbSet<Favourite> Favourites { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

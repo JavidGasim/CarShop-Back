@@ -15,11 +15,7 @@ namespace CarShop.Entities.Entites
         public string? PhoneNumber { get; set; }
         public string? ProfilePicture { get; set; }
         public string? City { get; set; }
-        public virtual IEnumerable<Car>? Cars { get; set; }
-        public CustomIdentityUser()
-        {
-            Cars = new List<Car>();
-        }
-
+        public virtual ICollection<Car> Cars { get; set; } = new List<Car>();
+        public virtual ICollection<Favourite> Favorites { get; set; } = new List<Favourite>();
     }
 }
