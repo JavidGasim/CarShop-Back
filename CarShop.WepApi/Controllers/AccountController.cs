@@ -110,7 +110,7 @@ namespace CarShop.WepApi.Controllers
 
                 _httpContextAccessor.HttpContext!.User = principal;
 
-                return Ok(new { Token = new JwtSecurityTokenHandler().WriteToken(token), Expiration = token.ValidTo });
+                return Ok(new { Token = new JwtSecurityTokenHandler().WriteToken(token), Expiration = token.ValidTo, Role = userRoles.FirstOrDefault() });
             }
 
             return Unauthorized();
