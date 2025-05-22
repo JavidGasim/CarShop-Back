@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using CarShop.DataAccess.Data;
 using CarShop.Entities.Entites;
 using Microsoft.AspNetCore.Identity;
@@ -21,6 +21,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddDistributedMemoryCache(); // Lazımdır
 
 builder.Services.AddControllers()
     .AddJsonOptions(opt =>
@@ -44,10 +45,8 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-builder.Services.AddDistributedMemoryCache();
-
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-builder.Services.AddSingleton<IEmailSender, EmailSender>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
@@ -107,7 +106,6 @@ builder.Services.AddAuthorization(Options =>
 {
     Options.AddPolicy("ClientPolicy", policy => policy.RequireRole("Client"));
 });
-
 
 var app = builder.Build();
 

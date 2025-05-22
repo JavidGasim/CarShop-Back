@@ -2,7 +2,7 @@
 {
     public class EmailDto
     {
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
     }
 }
