@@ -47,6 +47,8 @@ builder.Services.AddSession(options =>
 builder.Services.AddDistributedMemoryCache();
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddSingleton<IEmailSender, EmailSender>();
+
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 

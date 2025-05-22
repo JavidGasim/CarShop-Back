@@ -2,6 +2,7 @@
 using CarShop.Business.Services.Abstracts;
 using CarShop.Entities.Entites;
 using CarShop.WepApi.DTOS;
+using CarShop.WepApi.Services.Abstracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -24,9 +25,10 @@ namespace CarShop.WepApi.Controllers
         private readonly IConfiguration _configuration;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
+        private readonly IEmailSender _emailSender;
 
 
-        public AccountController(UserManager<CustomIdentityUser> userManager, IMapper mapper, SignInManager<CustomIdentityUser> signInManager, RoleManager<CustomIdentityRole> roleManager, IConfiguration configuration, ICustomIdentityUserService customIdentityUserService, IHttpContextAccessor httpContextAccessor)
+        public AccountController(UserManager<CustomIdentityUser> userManager, IMapper mapper, SignInManager<CustomIdentityUser> signInManager, RoleManager<CustomIdentityRole> roleManager, IConfiguration configuration, ICustomIdentityUserService customIdentityUserService, IHttpContextAccessor httpContextAccessor, IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -35,6 +37,7 @@ namespace CarShop.WepApi.Controllers
             _customIdentityUserService = customIdentityUserService;
             _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
+            _emailSender = emailSender;
         }
 
         [HttpPost("existUser")]
@@ -130,6 +133,50 @@ namespace CarShop.WepApi.Controllers
 
             return token;
         }
+
+        [HttpPost("send-code")]
+        public async Task<IActionResult> SendVerificationCode([FromBody] EmailDto dto)
+        {
+            var code = new Random().Next(100000, 999999).ToString();
+            var message = string.Format(@"
+  <html>
+    <body style='font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;'>
+      <div style='background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);'>
+        <h2 style='color: #333;'>Salam!</h2>
+        <p style='color: #555;'>Sizin təsdiq kodunuz aşağıdadır:</p>
+        <div style='font-size: 24px; color: #2c3e50; font-weight: bold; margin: 10px 0;'>{0}</div>
+        <p style='color: #777;'>Zəhmət olmasa bu kodu 5 dəqiqə ərzində istifadə edin.</p>
+        <hr />
+        <p style='font-size: 12px; color: #aaa;'>Bu mesaj avtomatik göndərilmişdir.</p>
+      </div>
+    </body>
+  </html>
+", code);
+
+            // kodu yadda saxlayırıq (DB, Cache və ya Memory)
+            // Məsələn: TempData, Session, ya Redis ilə saxlanıla bilər
+            HttpContext.Session.SetString(dto.Email, code);
+
+            await _emailSender.SendEmailAsync(dto.Email, "Email Verification", message);
+
+            return Ok(new { Message = "Verification code sent!" });
+        }
+
+        [HttpPost("verify-code")]
+        public IActionResult VerifyCode([FromBody] CodeVerificationDto dto)
+        {
+            var savedCode = HttpContext.Session.GetString(dto.Email);
+
+            if (savedCode == dto.Code)
+            {
+                // İstifadəçini qeydiyyatdan keçirə bilərsiniz
+                return Ok(new { Message = "Verification successful" });
+            }
+
+            return BadRequest(new { Message = "Invalid verification code" });
+        }
+
+
 
         [Authorize]
         [HttpGet("currentUser")]
