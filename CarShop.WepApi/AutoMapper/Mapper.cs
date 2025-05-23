@@ -9,6 +9,7 @@ namespace CarShop.WepApi.AutoMapper
         public Mapper()
         {
             CreateMap<CustomIdentityUser, UserDto>().ReverseMap();
+            CreateMap<Car, CarAddDto>().ReverseMap();
         }
     }
 }
