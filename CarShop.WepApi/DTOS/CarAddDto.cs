@@ -44,6 +44,8 @@ namespace CarShop.WepApi.DTOS
         public string? UserId { get; set; }
         [Required]
         public string? FuelType { get; set; }
+        [Required]
+        public string? City { get; set; }
 
     }
 }

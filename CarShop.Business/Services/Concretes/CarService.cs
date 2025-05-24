@@ -47,5 +47,19 @@ namespace CarShop.Business.Services.Concretes
         {
             return await _carDAL.GetFavCarsAsync(userId);
         }
+        public async Task AddFavCarAsync(Favourite favourite)
+        {
+            await _carDAL.AddFavCarAsync(favourite);
+        }
+
+        public async Task RemoveFavCarAsync(Favourite favourite)
+        {
+            await _carDAL.RemoveFavCarAsync(favourite);
+        }
+
+        public async Task<Favourite> GetFavouriteByUserIdAndCarIdAsync(string userId, int carId)
+        {
+            return await _carDAL.GetFavouriteByUserIdAndCarIdAsync(userId, carId);
+        }
     }
 }

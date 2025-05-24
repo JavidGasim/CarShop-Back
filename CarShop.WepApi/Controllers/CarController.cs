@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace CarShop.WepApi.Controllers
 {
@@ -108,7 +109,11 @@ namespace CarShop.WepApi.Controllers
         [Authorize]
         public async Task<IActionResult> GetMyFavs()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value;
+
+            var user = await _customIdentityUserService.GetByUserNameAsync(userName);
+
+            Console.WriteLine($"User: {user}");
             if (user == null)
             {
                 return Unauthorized();
@@ -116,6 +121,61 @@ namespace CarShop.WepApi.Controllers
 
             var favCars = await _carService.GetFavCarsAsync(user.Id);
             return Ok(favCars);
+        }
+
+        [HttpPost("addToFav/{carId}")]
+        [Authorize]
+        public async Task<IActionResult> AddToFav(int carId)
+        {
+            var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value;
+
+            var user = await _customIdentityUserService.GetByUserNameAsync(userName);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            var car = await _carService.GetCarByIdAsync(carId);
+            if (car == null)
+            {
+                return NotFound();
+            }
+            // Assuming Favourite is a model that contains UserId and CarId
+            var favourite = new Favourite
+            {
+                UserId = user.Id,
+                CarId = carId
+            };
+
+            await _carService.AddFavCarAsync(favourite);
+            return Ok(new { Message = "Car added to favourites successfully" });
+        }
+
+        [HttpDelete("removeFromFav/{carId}")]
+        [Authorize]
+        public async Task<IActionResult> RemoveFromFav(int carId)
+        {
+            var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value;
+            var user = await _customIdentityUserService.GetByUserNameAsync(userName);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+            var car = await _carService.GetCarByIdAsync(carId);
+            if (car == null)
+            {
+                return NotFound();
+            }
+
+            var favCar = await _carService.GetFavouriteByUserIdAndCarIdAsync(user.Id, carId);
+            // Assuming Favourite is a model that contains UserId and CarId
+            //var favourite = new Favourite
+            //{
+            //    UserId = user.Id,
+            //    CarId = carId
+            //};
+            await _carService.RemoveFavCarAsync(favCar);
+            return Ok(new { Message = "Car removed from favourites successfully" });
         }
     }
 }

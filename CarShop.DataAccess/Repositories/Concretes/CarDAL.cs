@@ -53,5 +53,23 @@ namespace CarShop.DataAccess.Repositories.Concretes
                 .Select(x => x.Car!)
                 .ToListAsync();
         }
+
+        public async Task AddFavCarAsync(Favourite favourite)
+        {
+            await _context.Favourites.AddAsync(favourite);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task RemoveFavCarAsync(Favourite favourite)
+        {
+            _context.Favourites.Remove(favourite);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<Favourite> GetFavouriteByUserIdAndCarIdAsync(string userId, int carId)
+        {
+            return await _context.Favourites
+                .FirstOrDefaultAsync(x => x.UserId == userId && x.CarId == carId);
+        }
     }
 }
