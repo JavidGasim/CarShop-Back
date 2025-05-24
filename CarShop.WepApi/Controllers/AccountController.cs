@@ -206,5 +206,18 @@ namespace CarShop.WepApi.Controllers
 
             return Ok(new { message = "Profil uğurla yeniləndi." });
         }
+
+        [Authorize]
+        [HttpGet("getUserById/{userId}")]
+        public async Task<IActionResult> GetUserById(string userId)
+        {
+            var user = await _customIdentityUserService.GetByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound(new { Message = "User not found" });
+            }
+            var userDto = _mapper.Map<UserDto>(user);
+            return Ok(userDto);
+        }
     }
 }

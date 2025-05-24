@@ -177,5 +177,18 @@ namespace CarShop.WepApi.Controllers
             await _carService.RemoveFavCarAsync(favCar);
             return Ok(new { Message = "Car removed from favourites successfully" });
         }
+
+        [HttpGet("getUserCar/{userId}")]
+        [Authorize]
+        public async Task<IActionResult> GetUserCar(string userId)
+        {
+            var user = await _customIdentityUserService.GetByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound(new { Message = "User not found" });
+            }
+            var cars = await _carService.GetCarsByUserIdAsync(userId);
+            return Ok(cars);
+        }
     }
 }

@@ -36,7 +36,7 @@ namespace CarShop.DataAccess.Repositories.Concretes
 
         public async Task<Car> GetCarByIdAsync(int id)
         {
-            return await _context.Cars.FirstOrDefaultAsync(x => x.Id == id);
+            return await _context.Cars.Include(c => c.CustomIdentityUser).FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task UpdateCarAsync(Car car)
@@ -70,6 +70,13 @@ namespace CarShop.DataAccess.Repositories.Concretes
         {
             return await _context.Favourites
                 .FirstOrDefaultAsync(x => x.UserId == userId && x.CarId == carId);
+        }
+
+        public async Task<List<Car>> GetCarsByUserIdAsync(string userId)
+        {
+            return await _context.Cars
+                .Where(x => x.CustomIdentityUser != null && x.CustomIdentityUser.Id == userId)
+                .ToListAsync();
         }
     }
 }

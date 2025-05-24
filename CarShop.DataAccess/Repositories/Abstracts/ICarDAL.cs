@@ -18,5 +18,6 @@ namespace CarShop.DataAccess.Repositories.Abstracts
         Task AddFavCarAsync(Favourite favourite);
         Task RemoveFavCarAsync(Favourite favourite);
         Task<Favourite> GetFavouriteByUserIdAndCarIdAsync(string userId, int carId);
+        Task<List<Car>> GetCarsByUserIdAsync(string userId);
     }
 }

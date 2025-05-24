@@ -61,5 +61,10 @@ namespace CarShop.Business.Services.Concretes
         {
             return await _carDAL.GetFavouriteByUserIdAndCarIdAsync(userId, carId);
         }
+
+        public async Task<List<Car>> GetCarsByUserIdAsync(string userId)
+        {
+            return await _carDAL.GetCarsByUserIdAsync(userId);
+        }
     }
 }
