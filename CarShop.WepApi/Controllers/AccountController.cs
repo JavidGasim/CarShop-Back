@@ -177,5 +177,34 @@ namespace CarShop.WepApi.Controllers
             var currentUserDto = _mapper.Map<UserDto>(currentUser);
             return Ok(new { User = currentUserDto });
         }
+
+        [Authorize]
+        [HttpPut("update")]
+        public async Task<IActionResult> UpdateProfile([FromBody] UserDto dto)
+        {
+            // 1. Mövcud istifadəçini tapırıq
+            var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value;
+
+            var user = await _customIdentityUserService.GetByUserNameAsync(userName);
+
+            if (user == null)
+                return NotFound(new { message = "İstifadəçi tapılmadı." });
+
+            // 2. Gələn məlumatları tətbiq edirik
+            user.FirstName = dto.FirstName ?? user.FirstName;
+            user.LastName = dto.LastName ?? user.LastName;
+            user.Email = dto.Email ?? user.Email;
+            user.PhoneNumber = dto.PhoneNumber ?? user.PhoneNumber;
+            user.City = dto.City ?? user.City;
+            user.ProfilePicture = dto.ProfilePicture ?? user.ProfilePicture;
+
+            // 3. Məlumatı yeniləyirik
+            var result = await _userManager.UpdateAsync(user);
+
+            if (!result.Succeeded)
+                return BadRequest(new { message = "Yeniləmə alınmadı.", errors = result.Errors });
+
+            return Ok(new { message = "Profil uğurla yeniləndi." });
+        }
     }
 }
