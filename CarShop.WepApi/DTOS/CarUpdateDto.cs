@@ -23,6 +23,7 @@ namespace CarShop.WepApi.DTOS
         public string? Description { get; set; }
         public string? FuelType { get; set; }
         public string? City { get; set; }
+        public string? FeedBacks { get; set; }
 
         //public virtual CustomIdentityUser? CustomIdentityUser { get; set; }
         //public virtual ICollection<Favourite> Favorites { get; set; } = new List<Favourite>();

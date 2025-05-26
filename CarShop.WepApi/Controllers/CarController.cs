@@ -86,6 +86,12 @@ namespace CarShop.WepApi.Controllers
             car.Url1 = dto.Url1 ?? car.Url1;
             car.Url2 = dto.Url2 ?? car.Url2;
             car.Url3 = dto.Url3 ?? car.Url3;
+            if (dto.FeedBacks != null && dto.FeedBacks.Any())
+            {
+                car.FeedBacks ??= new List<string>(); // Əgər null-dursa initialize et
+                car.FeedBacks.Add(dto.FeedBacks);
+            }
+
             await _carService.UpdateCarAsync(car);
 
             return Ok(new { Message = "Car updated successfully", car });
