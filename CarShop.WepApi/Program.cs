@@ -12,6 +12,7 @@ using CarShop.DataAccess.Repositories.Concretes;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using CarShop.WepApi.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDistributedMemoryCache(); // Lazımdır
+
+builder.Services.AddSignalR();
 
 builder.Services.AddControllers()
     .AddJsonOptions(opt =>
@@ -118,6 +121,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.MapHub<CarHub>("/carHub");
 
 app.UseHttpsRedirection();
 

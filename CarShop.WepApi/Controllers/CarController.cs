@@ -2,10 +2,12 @@
 using CarShop.Business.Services.Abstracts;
 using CarShop.Entities.Entites;
 using CarShop.WepApi.DTOS;
+using CarShop.WepApi.Hubs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
 
 namespace CarShop.WepApi.Controllers
@@ -18,13 +20,15 @@ namespace CarShop.WepApi.Controllers
         private readonly ICustomIdentityUserService _customIdentityUserService;
         private readonly UserManager<CustomIdentityUser> _userManager;
         private readonly IMapper _mapper;
+        private readonly IHubContext<CarHub> _hubContext;
 
-        public CarController(ICarService carService, IMapper mapper, ICustomIdentityUserService customIdentityUserService, UserManager<CustomIdentityUser> userManager)
+        public CarController(ICarService carService, IMapper mapper, ICustomIdentityUserService customIdentityUserService, UserManager<CustomIdentityUser> userManager, IHubContext<CarHub> hubContext)
         {
             _carService = carService;
             _mapper = mapper;
             _customIdentityUserService = customIdentityUserService;
             _userManager = userManager;
+            _hubContext = hubContext;
         }
 
         [HttpGet]
@@ -90,6 +94,12 @@ namespace CarShop.WepApi.Controllers
             {
                 car.FeedBacks ??= new List<string>(); // Əgər null-dursa initialize et
                 car.FeedBacks.Add(dto.FeedBacks);
+
+                await _hubContext.Clients.All.SendAsync("ReceiveFeedback", new
+                {
+                    CarId = car.Id,
+                    NewFeedback = dto.FeedBacks
+                });
             }
 
             await _carService.UpdateCarAsync(car);
