@@ -98,8 +98,18 @@ namespace CarShop.WepApi.Controllers
                 await _hubContext.Clients.All.SendAsync("ReceiveFeedback", new
                 {
                     CarId = car.Id,
-                    NewFeedback = dto.FeedBacks
+                    NewFeedback = dto.FeedBacks,
+                    //CarName = $"{car.Marka} {car.Model} ({car.Year})"
                 });
+
+                if (!string.IsNullOrEmpty(car.CustomIdentityUser.Id))
+                {
+                    await _hubContext.Clients.Group(car.CustomIdentityUser.UserName).SendAsync("NotifyOwner", new
+                    {   
+                        CarId = car.Id,
+                        Message = $"You got new feedback for - {car.Marka} {car.Model} ({car.Year})"
+                    });
+                }
             }
 
             await _carService.UpdateCarAsync(car);
@@ -129,7 +139,7 @@ namespace CarShop.WepApi.Controllers
 
             var user = await _customIdentityUserService.GetByUserNameAsync(userName);
 
-            Console.WriteLine($"User: {user}");
+            //Console.WriteLine($"User: {user}");
             if (user == null)
             {
                 return Unauthorized();
