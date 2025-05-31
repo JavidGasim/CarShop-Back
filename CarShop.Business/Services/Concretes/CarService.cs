@@ -28,9 +28,9 @@ namespace CarShop.Business.Services.Concretes
             await _carDAL.DeleteCarAsync(car);
         }
 
-        public async Task<List<Car>> GetAllCarsAsync()
+        public async Task<List<Car>> GetAllCarsAsync(int pageNumber, int pageSize)
         {
-            return await _carDAL.GetAllCarsAsync();
+            return await _carDAL.GetAllCarsAsync(pageNumber, pageSize);
         }
 
         public async Task<Car> GetCarByIdAsync(int id)

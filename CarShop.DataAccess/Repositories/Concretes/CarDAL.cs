@@ -29,9 +29,11 @@ namespace CarShop.DataAccess.Repositories.Concretes
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<Car>> GetAllCarsAsync()
+        public async Task<List<Car>> GetAllCarsAsync(int pageNumber, int pageSize)
         {
-            return await _context.Cars.ToListAsync();
+            return await _context.Cars.OrderByDescending(c => c.Id).Skip((pageNumber - 1) * pageSize)
+        .Take(pageSize)
+        .ToListAsync();
         }
 
         public async Task<Car> GetCarByIdAsync(int id)

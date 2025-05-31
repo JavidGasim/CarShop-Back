@@ -9,7 +9,7 @@ namespace CarShop.Business.Services.Abstracts
 {
     public interface ICarService
     {
-        Task<List<Car>> GetAllCarsAsync();
+        Task<List<Car>> GetAllCarsAsync(int pageNumber, int pageSize);
         Task<Car> GetCarByIdAsync(int id);
         Task AddCarAsync(Car car);
         Task UpdateCarAsync(Car car);

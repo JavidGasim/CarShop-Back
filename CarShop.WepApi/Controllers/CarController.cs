@@ -32,9 +32,9 @@ namespace CarShop.WepApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllCars()
+        public async Task<IActionResult> GetAllCars(int pageNumber = 1, int pageSize = 9)
         {
-            var cars = await _carService.GetAllCarsAsync();
+            var cars = await _carService.GetAllCarsAsync(pageNumber, pageSize);
             return Ok(cars);
         }
 
@@ -105,7 +105,7 @@ namespace CarShop.WepApi.Controllers
                 if (!string.IsNullOrEmpty(car.CustomIdentityUser.Id))
                 {
                     await _hubContext.Clients.Group(car.CustomIdentityUser.UserName).SendAsync("NotifyOwner", new
-                    {   
+                    {
                         CarId = car.Id,
                         Message = $"You got new feedback for - {car.Marka} {car.Model} ({car.Year})"
                     });
